@@ -1,0 +1,1 @@
+This is the folder for all code related to the Autonomous Skill Challenge

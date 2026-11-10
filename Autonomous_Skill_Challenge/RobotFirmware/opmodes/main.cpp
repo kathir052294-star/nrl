@@ -20,14 +20,20 @@ static LineActions lineActions(drive, line);
 
 static ActionPtr dropCore()
 {
-    arm.setPosition(ARM_DOWN);
-    claw.setPosition(CLAW_OPEN);
+    return sequential({instant([]
+                               { arm.setPosition(ARM_DOWN); }),
+
+                       instant([]
+                               { claw.setPosition(CLAW_OPEN); })});
 }
 
 static ActionPtr pickCore()
 {
-    claw.setPosition(CLAW_CLOSED);
-    arm.setPosition(ARM_UP);
+    return sequential({instant([]
+                               { claw.setPosition(CLAW_CLOSED); }),
+
+                       instant([]
+                               { arm.setPosition(ARM_UP); })});
 }
 
 class main : public NRLOpMode
@@ -49,24 +55,67 @@ public:
 
     void start() override
     {
-        int count;
-        // driveActions.drive;
         while (true)
         {
-            count = __builtin_popcount(line.mask()); // gets how many of the sensors are returning black(1)
-            if (2 <= count <= 4)
+            int count = __builtin_popcount(line.mask());
+            if (count <= 4)
             {
                 break;
             }
         }
+
+        runAction(
+            lineActions.auto_()
+                .followToJunction()
+                .right()
+                .followToEnd()
+                .then(pickCore())
+                .uTurn()
+                .followToJunction()
+                .right()
+                .followToJunction()
+                .left()
+                .followToEnd()
+                .then(dropCore())
+                .uTurn()
+                .followToJunction()
+                .left()
+                .followToJunction()
+                .right()
+                .followToEnd()
+                .then(pickCore())
+                .uTurn()
+                .followToJunction()
+                .left()
+                .followToJunction()
+                .right()
+                .followToEnd()
+                .then(dropCore())
+                .uTurn()
+                .followToJunction()
+                .left()
+                .followToJunction()
+                .followToJunction()
+                .right()
+                .followToEnd()
+                .then(pickCore())
+                .uTurn()
+                .followToJunction()
+                .right()
+                .followToJunction()
+                .left()
+                .followToEnd()
+                .then(pickCore())
+                .uTurn()
+                .followToJunction()
+                .left()
+                
+                
+                .build());
     }
 
     void loop() override
     {
-        int corenum = 1;
-        lineActions.clearFault();
-        lineActions.resetCounts();
-        lineActions.clearRoute();
     }
 
     void stop() override

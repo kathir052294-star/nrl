@@ -109,8 +109,7 @@ public:
                 .uTurn()
                 .followToJunction()
                 .left()
-                
-                
+
                 .build());
     }
 

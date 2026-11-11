@@ -55,17 +55,13 @@ public:
 
     void start() override
     {
-        while (true)
-        {
-            int count = __builtin_popcount(line.mask());
-            if (count <= 4)
-            {
-                break;
-            }
-        }
+        lineActions.clearFault();
+        lineActions.resetCounts();
+        lineActions.clearRoute();
 
         runAction(
             lineActions.auto_()
+                .leaveBox()
                 .followToJunction()
                 .right()
                 .followToEnd()
@@ -105,21 +101,64 @@ public:
                 .followToJunction()
                 .left()
                 .followToEnd()
+                .then(dropCore())
+                .uTurn()
+                .followToJunction()
+                .left()
+                .followToJunction()
+                .right()
+                .followToEnd()
                 .then(pickCore())
                 .uTurn()
                 .followToJunction()
                 .left()
-
+                .followToJunction()
+                .right()
+                .followToEnd()
+                .then(dropCore())
+                .uTurn()
+                .followToJunction()
+                .left()
+                .followToJunction()
+                .followToJunction()
+                .right()
+                .followToEnd()
+                .then(pickCore())
+                .uTurn()
+                .followToJunction()
+                .right()
+                .followToJunction()
+                .left()
+                .followToEnd()
+                .then(dropCore())
+                .uTurn()
+                .followToJunction()
+                .left()
+                .followToJunction()
+                .right()
+                .followToEnd()
+                .then(pickCore())
+                .uTurn()
+                .followToJunction()
+                .left()
+                .followToJunction()
+                .right()
+                .followToEnd()
+                .then(dropCore())
+                .uTurn()
+                .followToJunction()
+                .left()
+                .followToJunction()
+                .followToBox()
+                .stop()
                 .build());
     }
 
-    void loop() override
-    {
-    }
+    void loop() override {}
 
     void stop() override
     {
-        // Runs once on STOP — stop your motors/servos here.
+        drive.stop();
     }
 };
 
